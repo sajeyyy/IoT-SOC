@@ -3,10 +3,9 @@
 #include <Arduino.h>
 #include <ESP8266WebServer.h>
 
-ServerHandler::ServerHandler(char* networkName, char* pass) 
+ServerHandler::ServerHandler() 
 {
-    SSID = networkName;
-    password = pass;
+    
 }
 
 void ServerHandler::begin() {

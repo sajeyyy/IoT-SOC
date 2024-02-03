@@ -6,7 +6,7 @@
 class ServerHandler
 {
 public:
-    ServerHandler(char* networkName, char* pass);
+    ServerHandler();
     void begin();
     void handleClient();
 

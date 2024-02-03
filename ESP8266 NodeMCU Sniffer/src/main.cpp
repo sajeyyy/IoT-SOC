@@ -6,20 +6,42 @@
 #include <ESP8266WiFi.h>
 
 
-//Declare Variables
+//WiFi Credentials
 const char* ssid = "test";
 const char* password = "test1234";
+
+//Led Pin Number
+const int ledPin = D4;
+
+//WiFi and Server Handler Objects
+WiFiHandler wifiHandler(ssid, password);
+
+void flashLED(int pin, int onDuration, int offDuration) 
+{
+  digitalWrite(pin, HIGH);
+  delay(onDuration);
+  digitalWrite(pin, LOW);
+  delay(offDuration);
+}
 
 // Initialize serial communication
 void setup() 
 {
-  Serial.begin(115200);
-  delay(1000);
-  Serial.println("Hello, ESP8266!");
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+  delay(2000);
+  Serial.println("\n\nHello, ESP8266!");
+
+  wifiHandler.connect();
+
+  // Flash LED to show device is connected and running
+  for (int i = 3; i < 6; ++i) 
+  {
+    flashLED(ledPin, i * 100, i * 100);
+  }
 }
 
 void loop() 
 {
-  Serial.println("Looping...");
-  delay(1000);
+  
 }

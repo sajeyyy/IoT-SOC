@@ -10,8 +10,8 @@ class WiFiHandler
         void connect();
   
     private:
-        const char* ssid;
-        const char* password;
+        const char* m_ssid;
+        const char* m_password;
 };
 
 #endif
