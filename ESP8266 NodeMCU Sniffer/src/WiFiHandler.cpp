@@ -8,10 +8,16 @@ WiFiHandler::WiFiHandler(const char* ssid, const char* password)
 }
 
 void WiFiHandler::connect() {
-  // Set ESP8266 to AP mode with the specified SSID and password
+// Set ESP8266 to AP mode with specified SSID and password
+  Serial.println("\n\nSetting up ESP8266 Access Point...");
+  Serial.print("\nSSID: ");
+  Serial.println(m_ssid);
+  Serial.print("Password: ");
+  Serial.println(m_password);
+
   WiFi.softAP(m_ssid, m_password);
 
-  Serial.println("ESP8266 Access Point Started");
+  Serial.println("\nESP8266 Access Point Started");
   Serial.print("IP Address: ");
   Serial.println(WiFi.softAPIP());
 }

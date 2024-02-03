@@ -13,8 +13,6 @@ public:
 private:
     ESP8266WebServer m_Server;
     void handleRoot();
-    const char* SSID;
-    const char* password;
 };
 
 #endif
