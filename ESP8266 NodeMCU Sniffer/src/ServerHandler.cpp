@@ -11,7 +11,7 @@ ServerHandler::ServerHandler() {
 void ServerHandler::begin() {
   // Start the server
   m_Server.begin();
-  Serial.println("HTTP server started");
+  Serial.println("\nHTTP server started");
 }
 
 void ServerHandler::handleClient() {
@@ -21,5 +21,5 @@ void ServerHandler::handleClient() {
 
 void ServerHandler::handleRoot() {
   // Handle the root URL
-  m_Server.send(200, "text/plain", "Hello, ESP8266!");
+  m_Server.send(200, "text/plain", "Hello, ESP8266! Welcome to the beginning of the end!");
 }

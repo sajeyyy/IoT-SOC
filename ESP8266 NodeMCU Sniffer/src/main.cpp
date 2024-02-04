@@ -8,46 +8,34 @@
 
 
 //WiFi Credentials
-const char* ssid = "test1234";
-const char* password = "admin";
+const char* ssid = "test1234"; //WiFi SSID
+const char* password = "admin"; //WiFi Password
 
 //Led Pin Number
-const int ledPin = D4;
+const int ledPin = D4; 
 
 //WiFi and Server Handler Objects
 WiFiHandler wifiHandler(ssid, password);
-ServerHandler serverHandler;
+ServerHandler serverHandler; 
 
-void flashLED(int pin, int onDuration, int offDuration) 
-{
-  digitalWrite(pin, HIGH);
-  delay(onDuration);
-  digitalWrite(pin, LOW);
-  delay(offDuration);
-}
 
 // Initialize serial communication
 void setup() 
 {
-  pinMode(ledPin, OUTPUT);
-  Serial.begin(9600);
-  delay(2000);
+  pinMode(ledPin, OUTPUT); //Sets LED light to output only
+  Serial.begin(9600); //Baud rate set to 9600 for serial communication
 
-  wifiHandler.connect();
+  delay(2000); //Wait before setup before setting up WiFi
 
-  serverHandler.begin();
+  wifiHandler.connect(); //Setup WiFi
+  serverHandler.begin(); //Setup server
   
   Serial.println("\nHello, ESP8266!");
-
-  // Flash LED to show device is connected and running
-  for (int i = 3; i < 6; ++i) 
-  {
-    flashLED(ledPin, i * 100, 100);
-  }
 }
 
 void loop() 
 {
 // Handle server clients
   serverHandler.handleClient();
+  wifiHandler.printConnectedDevices();
 }

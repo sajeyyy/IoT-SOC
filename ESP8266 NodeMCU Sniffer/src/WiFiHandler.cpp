@@ -17,7 +17,20 @@ void WiFiHandler::connect() {
 
   WiFi.softAP(m_ssid, m_password);
 
-  Serial.println("\nESP8266 Access Point Started");
-  Serial.print("IP Address: ");
+  Serial.println("\nESP8266 Access Point Started!");
+  Serial.print("Device's IP Address: ");
   Serial.println(WiFi.softAPIP());
+}
+
+void WiFiHandler::printConnectedDevices() 
+{
+  Serial.println("\nConnected Devices:");
+    
+    for (int i = 0; i < m_deviceCount; ++i)
+    {
+        Serial.print("Device ");
+        Serial.print(i + 1);
+        Serial.print(": ");
+        Serial.println(m_connectedDevices[i]);
+    }
 }
