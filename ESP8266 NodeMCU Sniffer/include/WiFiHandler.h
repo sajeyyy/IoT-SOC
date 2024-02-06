@@ -9,13 +9,16 @@ class WiFiHandler
         WiFiHandler(const char* ssid, const char* password);
         void connect();
         void printConnectedDevices();
-  
+        void onStationConnected(const WiFiEventSoftAPModeStationConnected& event);
+        String macToString(const uint8_t* mac);
+
     private:
         const char* m_ssid;
         const char* m_password;
-
-        IPAddress m_connectedDevices[4];
+        
+        bool m_newUser;
         int m_deviceCount;
+        String m_connectedDevices[4];
 };
 
 #endif

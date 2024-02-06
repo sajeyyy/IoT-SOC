@@ -37,5 +37,9 @@ void loop()
 {
 // Handle server clients
   serverHandler.handleClient();
+
+//If new client connects to the softAP
   wifiHandler.printConnectedDevices();
+
+  delay(200);
 }
