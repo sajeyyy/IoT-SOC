@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "ServerHandler.h"
 #include "WiFiHandler.h"
 
@@ -6,18 +8,14 @@
 #include <ESP8266WiFi.h>
 #include <Preferences.h>
 
-
-//WiFi Credentials
-const char* ssid = "test1234"; //WiFi SSID
-const char* password = "admin"; //WiFi Password
-
 //Led Pin Number
 const int ledPin = D4; 
 
 //WiFi and Server Handler Objects
-WiFiHandler wifiHandler(ssid, password);
+WiFiHandler wifiHandler;
 ServerHandler serverHandler; 
 
+/*|----------------------------------------------------------------|*/
 
 // Initialize serial communication
 void setup() 
@@ -25,11 +23,12 @@ void setup()
   pinMode(ledPin, OUTPUT); //Sets LED light to output only
   Serial.begin(9600); //Baud rate set to 9600 for serial communication
 
-  delay(2000); //Wait before setup before setting up WiFi
+  delay(2000); //Wait before setup before setting up WiFi and Server
 
-  wifiHandler.connect(); //Setup WiFi
   serverHandler.begin(); //Setup server
-  
+  delay(500); //Give enough time between setups
+  wifiHandler.connect(); //Setup WiFi
+    
   Serial.println("\nHello, ESP8266!");
 }
 
@@ -38,8 +37,5 @@ void loop()
 // Handle server clients
   serverHandler.handleClient();
 
-//If new client connects to the softAP
-  wifiHandler.printConnectedDevices();
-
-  delay(200);
+  delay(250);
 }
