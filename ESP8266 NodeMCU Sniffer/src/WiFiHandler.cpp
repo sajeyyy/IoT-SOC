@@ -5,7 +5,7 @@
 
 WiFiHandler::WiFiHandler()
 {
-    ssid = "test1234";
+    ssid = "ConnectToMePlz";
     psk = "admin1234";
 }
 
@@ -18,14 +18,14 @@ void WiFiHandler::connect()
     Serial.print("Password: ");
     Serial.println(psk);
 
-// WiFi Configuration will not be saved in flash 
+// WiFi Configuration will not be saved in flash memory 
     WiFi.persistent(false);
 
 // Set up an access point
     WiFi.mode(WIFI_AP);
-    WiFi.softAP(ssid, psk);
+    WiFi.softAP(ssid);
 
-    Serial.println("\nESP8266 Access Point Started!");
+//Device's IP address to connect to web server
     Serial.print("Device's IP Address: ");
     Serial.println(WiFi.softAPIP());
 
@@ -33,6 +33,7 @@ void WiFiHandler::connect()
     stationConnectedHandler = WiFi.onSoftAPModeStationConnected(std::bind(&WiFiHandler::onStationConnected, this, std::placeholders::_1));
 }
 
+//Converts mac address to string, so it's printable
 String WiFiHandler::macToString(const uint8_t* mac) {
     char buf[18];
     snprintf(buf, sizeof(buf), "%02X:%02X:%02X:%02X:%02X:%02X",
@@ -46,5 +47,6 @@ void WiFiHandler::onStationConnected(const WiFiEventSoftAPModeStationConnected& 
     Serial.print("\nNew device connected, MAC address: ");
     Serial.println(macToString(event.mac));
 
+//Stores mac address in an array
     m_connectedDevices[m_deviceCount++] = (macToString(event.mac));
 }

@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include <EEPROM.h>
 #include "ServerHandler.h"
 #include "WiFiHandler.h"
 
@@ -7,6 +8,7 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266WiFi.h>
 #include <Preferences.h>
+#include <LittleFS.h>
 
 //Led Pin Number
 const int ledPin = D4; 
@@ -23,10 +25,8 @@ void setup()
   pinMode(ledPin, OUTPUT); //Sets LED light to output only
   Serial.begin(9600); //Baud rate set to 9600 for serial communication
 
-  delay(2000); //Wait before setup before setting up WiFi and Server
-
-  serverHandler.begin(); //Setup server
-  delay(500); //Give enough time between setups
+  LittleFS.begin(); //Initialize the LittleFS file system
+  serverHandler.begin(); //Setup web server
   wifiHandler.connect(); //Setup WiFi
     
   Serial.println("\nHello, ESP8266!");
@@ -34,8 +34,6 @@ void setup()
 
 void loop() 
 {
-// Handle server clients
+// Server Handler
   serverHandler.handleClient();
-
-  delay(250);
 }
