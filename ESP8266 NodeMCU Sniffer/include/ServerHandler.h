@@ -13,6 +13,8 @@ public:
 private:
     ESP8266WebServer m_Server;
     void handleRoot();
+    void handleCSS();
+    void handleJS();
 };
 
 #endif

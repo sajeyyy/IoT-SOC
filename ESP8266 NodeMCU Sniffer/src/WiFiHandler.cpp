@@ -5,25 +5,25 @@
 
 WiFiHandler::WiFiHandler()
 {
-    ssid = "ConnectToMePlz";
-    psk = "admin1234";
+    m_ssid = "ESP8266 Sniffer";
+    m_psk = "admin1234";
 }
 
 void WiFiHandler::connect() 
 {
 // Set ESP8266 to AP mode with specified SSID and password
-    Serial.println("\n\nSetting up ESP8266 Access Point...");
+    Serial.println("\nSetting up ESP8266 Access Point...");
     Serial.print("\nSSID: ");
-    Serial.println(ssid);
+    Serial.println(m_ssid);
     Serial.print("Password: ");
-    Serial.println(psk);
+    Serial.println(m_psk);
 
 // WiFi Configuration will not be saved in flash memory 
     WiFi.persistent(false);
 
 // Set up an access point
     WiFi.mode(WIFI_AP);
-    WiFi.softAP(ssid);
+    WiFi.softAP(m_ssid, m_psk);
 
 //Device's IP address to connect to web server
     Serial.print("Device's IP Address: ");
@@ -33,7 +33,7 @@ void WiFiHandler::connect()
     stationConnectedHandler = WiFi.onSoftAPModeStationConnected(std::bind(&WiFiHandler::onStationConnected, this, std::placeholders::_1));
 }
 
-//Converts mac address to string, so it's printable
+//Converts mac address to string, so that it's printable
 String WiFiHandler::macToString(const uint8_t* mac) {
     char buf[18];
     snprintf(buf, sizeof(buf), "%02X:%02X:%02X:%02X:%02X:%02X",
@@ -41,7 +41,7 @@ String WiFiHandler::macToString(const uint8_t* mac) {
     return String(buf);
 }
 
-// Callback function for when a client connects
+// Callback function for when a client connects to the AP
 void WiFiHandler::onStationConnected(const WiFiEventSoftAPModeStationConnected& event) 
 {
     Serial.print("\nNew device connected, MAC address: ");

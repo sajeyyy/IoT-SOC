@@ -14,8 +14,8 @@ class WiFiHandler
         void onStationConnected(const WiFiEventSoftAPModeStationConnected& evt);
 
     private:
-        const char* ssid;
-        const char* psk;
+        const char* m_ssid;
+        const char* m_psk;
         
         bool m_newUser;
         int m_deviceCount;
