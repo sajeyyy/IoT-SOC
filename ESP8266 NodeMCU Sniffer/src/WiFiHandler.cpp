@@ -9,6 +9,7 @@ WiFiHandler::WiFiHandler()
     m_psk = "admin1234";
 }
 
+//Configures the softAP
 void WiFiHandler::connect() 
 {
 // Set ESP8266 to AP mode with specified SSID and password
@@ -29,11 +30,13 @@ void WiFiHandler::connect()
     Serial.print("Device's IP Address: ");
     Serial.println(WiFi.softAPIP());
 
-// Register the callback for the station connection event
+    Serial.println("\nAccess Point Configured!");
+
+// Register the callback for the AP station connection event
     stationConnectedHandler = WiFi.onSoftAPModeStationConnected(std::bind(&WiFiHandler::onStationConnected, this, std::placeholders::_1));
 }
 
-//Converts mac address to string, so that it's printable
+//Converts mac address to string, so that it becomes printable
 String WiFiHandler::macToString(const uint8_t* mac) {
     char buf[18];
     snprintf(buf, sizeof(buf), "%02X:%02X:%02X:%02X:%02X:%02X",

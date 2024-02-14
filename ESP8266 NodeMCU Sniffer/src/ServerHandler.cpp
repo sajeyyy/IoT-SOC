@@ -37,6 +37,7 @@ void ServerHandler::handleRoot()
   } 
   else 
   {
+      Serial.println("\nHTML file not found!");
       m_Server.send(500, "text/plain", "Internal Server Error - HTML file");
   }
 }
