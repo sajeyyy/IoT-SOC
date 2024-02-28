@@ -13,13 +13,16 @@ class WiFiHandler
         WiFiEventHandler stationConnectedHandler;
         void onStationConnected(const WiFiEventSoftAPModeStationConnected& evt);
 
+        int getDeviceCount();
+        String getConnectedDevice(int index);
+
     private:
         const char* m_ssid;
         const char* m_psk;
         
         bool m_newUser;
         int m_deviceCount;
-        String m_connectedDevices[4];
+        String m_connectedDevices[6];
 };
 
 #endif

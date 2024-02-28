@@ -2,19 +2,23 @@
 #define SERVER_HANDLER_H
 
 #include <ESP8266WebServer.h>
+#include "WiFiHandler.h"
 
 class ServerHandler
 {
 public:
-    ServerHandler();
+    ServerHandler(WiFiHandler& WiFiHandler);
     void begin();
     void handleClient();
 
 private:
     ESP8266WebServer m_Server;
+    WiFiHandler& m_WiFiHandler;
     void handleRoot();
-    void handleCSS();
     void handleJS();
+    void handleCSS();
+    void handleDeviceList();
+    
 };
 
 #endif
