@@ -1,0 +1,125 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FFF;
+    padding: 10px 20px;
+}
+
+.menu-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    background-color: #fff;
+    border: 3px solid #ddd;
+    border-radius: 20px;
+    border-color: #8B4513;
+    padding: 0;
+    cursor: pointer;
+}
+
+.menu-button img {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.menu-placeholder {
+    visibility: hidden;
+    width: 50px;
+    height: 50px;
+}
+
+.nav-button {
+    background-color: #fff;
+    border: 3px solid #ddd;
+    border-radius: 20px;
+    border-color: #8B4513;
+    padding: 10px 15px;
+    margin: 10px 0;
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 24px;
+    color: #000000;
+    text-align: center;
+    font-weight: bold;
+}
+
+.button-logo {
+    width: 40px; 
+    height: 40px;
+    margin-right: 15px; 
+}
+
+.phone-button-logo {
+    width: 45px;
+    height: 45px;
+    margin-right: 15px;
+}
+
+.menu-button:hover {
+    background-color: #f8f8f8;
+}
+
+.title {
+    text-align: center;
+    flex-grow: 1;
+    margin: 0;
+}
+
+.placeholder {
+    width: 30px;
+    height: auto;
+    visibility: hidden;
+}
+
+.separator {
+    border: 0;
+    height: 3px;
+    background-color: #8B4513;
+    margin: 0;
+}
+
+.content {
+    padding: 20px;
+    text-align: center;
+}
+
+#device-table {
+    width: 80%; /* Set table width */
+    margin: 20px auto; /* Center the table on the page */
+    border-collapse: collapse; /* Collapses the border */
+}
+
+#device-table, #device-table th, #device-table td {
+    border: 1px solid #ddd; /* Add border to the table, th, and td */
+}
+
+#device-table th, #device-table td {
+    text-align: left; /* Align text to the left */
+    padding: 8px; 
+}
+
+#device-table tr {
+    background-color: #f2f2f2; /* Device rows white */
+}
+
+#device-table th {
+    background-color: #154917; 
+    color: white;
+    padding: 10px; 
+}
+

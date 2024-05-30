@@ -10,7 +10,14 @@ ServerHandler::ServerHandler(WiFiHandler& wifiHandler) : m_Server(80), m_WiFiHan
 	m_Server.on("/", HTTP_GET, std::bind(&ServerHandler::handleRoot, this));
   	m_Server.on("/style.css", HTTP_GET, std::bind(&ServerHandler::handleCSS, this));
   	m_Server.on("/script.js", HTTP_GET, std::bind(&ServerHandler::handleJS, this));
-  	m_Server.on("/devices", HTTP_GET, std::bind(&ServerHandler::handleDeviceList, this)); // Register endpoint
+	m_Server.on("/images", HTTP_GET, std::bind(&ServerHandler::handleImages, this)); 
+  	m_Server.on("/devices", HTTP_GET, std::bind(&ServerHandler::handleDeviceList, this)); 
+
+	// Catch-all handler for any other GET requests
+    m_Server.onNotFound([this]() 
+	{
+        handleFile(m_Server.uri());
+    });
 }
 
 // Start the server
@@ -62,7 +69,7 @@ void ServerHandler::handleJS()
 
 void ServerHandler::handleCSS() 
 {
-    File cssFile = LittleFS.open("/styles.css", "r");
+    File cssFile = LittleFS.open("/style.css", "r");
     
     if (cssFile) 
     {
@@ -76,6 +83,50 @@ void ServerHandler::handleCSS()
       	m_Server.send(404, "text/plain", "404: Not Found");
     }
 }
+
+void ServerHandler::handleImages() 
+{
+	Dir dir = LittleFS.openDir("/images");
+	String html = "<html><body><h1>Image List</h1><ul>";
+	
+	while (dir.next()) {
+		String fileName = dir.fileName();
+		String filePath = "/images/" + fileName;
+		// Generate an HTML link for each file
+		html += "<li><a href=\"" + filePath + "\">" + fileName + "</a></li>";
+	}
+	html += "</ul></body></html>";
+	m_Server.send(200, "text/html", html);
+}
+
+void ServerHandler::handleFile(String path) {
+    String contentType = getContentType(path); 
+    File file = LittleFS.open(path, "r");
+
+    if (!file) {
+        Serial.println("File not found: " + path);
+        m_Server.send(404, "text/plain", "404: File Not Found");
+        return;
+    }
+
+    Serial.println("File sent: " + path);
+    m_Server.streamFile(file, contentType);
+    file.close();
+}
+
+// This function determines the content type based on the file extension
+String ServerHandler::getContentType(String filename) {
+    if (filename.endsWith(".htm")) return "text/html";
+    else if (filename.endsWith(".html")) return "text/html";
+    else if (filename.endsWith(".css")) return "text/css";
+    else if (filename.endsWith(".js")) return "application/javascript";
+    else if (filename.endsWith(".png")) return "image/png";
+    else if (filename.endsWith(".jpg")) return "image/jpeg";
+    
+	(Serial.println("\nIncompatible File Type!")); 
+	return "text/plain";
+}
+
 
 void ServerHandler::handleDeviceList() 
 {

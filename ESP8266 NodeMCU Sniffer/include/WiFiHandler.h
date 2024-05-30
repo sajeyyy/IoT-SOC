@@ -8,10 +8,11 @@ class WiFiHandler
     public:
         WiFiHandler();
         void connect();
-
-        String macToString(const uint8_t* mac);
         WiFiEventHandler stationConnectedHandler;
+        WiFiEventHandler stationDisconnectedHandler;
+
         void onStationConnected(const WiFiEventSoftAPModeStationConnected& evt);
+        void onStationDisconnected(const WiFiEventSoftAPModeStationDisconnected& evt) ;
 
         int getDeviceCount();
         String getConnectedDevice(int index);
@@ -23,6 +24,9 @@ class WiFiHandler
         bool m_newUser;
         int m_deviceCount;
         String m_connectedDevices[6];
+
+        void removeDevice(String macAddress);
+        String macToString(const uint8_t* mac);
 };
 
 #endif

@@ -17,8 +17,11 @@ private:
     void handleRoot();
     void handleJS();
     void handleCSS();
+    void handleImages();
     void handleDeviceList();
-    
+
+    void handleFile(String path);
+    String getContentType(String filename);
 };
 
 #endif

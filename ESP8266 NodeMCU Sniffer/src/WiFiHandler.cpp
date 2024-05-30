@@ -3,13 +3,11 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
 
-
 WiFiHandler::WiFiHandler()
 {
     m_ssid = "Your ESP Friend";
     m_psk = "admin1234";
 }
-
 
 //Configures the softAP
 void WiFiHandler::connect() 
@@ -36,10 +34,11 @@ void WiFiHandler::connect()
 
 // Register the callback for the AP station connection event
     stationConnectedHandler = WiFi.onSoftAPModeStationConnected(std::bind(&WiFiHandler::onStationConnected, this, std::placeholders::_1));
+    stationDisconnectedHandler = WiFi.onSoftAPModeStationDisconnected(std::bind(&WiFiHandler::onStationDisconnected, this, std::placeholders::_1));
 }
 
 
-//Converts mac address to string, so that it becomes printable
+//Converts mac address to a string, so that it becomes printable
 String WiFiHandler::macToString(const uint8_t* mac) 
 {
     char buf[18];
@@ -48,6 +47,23 @@ String WiFiHandler::macToString(const uint8_t* mac)
     return String(buf);
 }
 
+void WiFiHandler::removeDevice(String macAddress) {
+    int indexToRemove = -1;
+    // Find the index of the device to remove
+    for (int i = 0; i < m_deviceCount; ++i) {
+        if (m_connectedDevices[i] == macAddress) {
+            indexToRemove = i;
+            break;
+        }
+    }
+    // If the device was found, remove it by shifting elements
+    if (indexToRemove != -1) {
+        for (int i = indexToRemove; i < m_deviceCount - 1; ++i) {
+            m_connectedDevices[i] = m_connectedDevices[i + 1];
+        }
+        m_deviceCount--; // Decrement the count of connected devices
+    }
+}
 
 // Callback function for when a client connects to the AP
 void WiFiHandler::onStationConnected(const WiFiEventSoftAPModeStationConnected& event) 
@@ -55,7 +71,7 @@ void WiFiHandler::onStationConnected(const WiFiEventSoftAPModeStationConnected& 
     Serial.print("\nNew device connected, MAC address: ");
     Serial.println(macToString(event.mac));
 
-//Stores mac address in an array
+//Store the mac address in an array
     m_connectedDevices[m_deviceCount] = (macToString(event.mac));
     m_deviceCount += 1;
 
@@ -63,13 +79,21 @@ void WiFiHandler::onStationConnected(const WiFiEventSoftAPModeStationConnected& 
     Serial.println(m_deviceCount);
 }
 
+//Callback function when a client disconnects from the AP
+void WiFiHandler::onStationDisconnected(const WiFiEventSoftAPModeStationDisconnected& evt) {
+    String macAddress = macToString(evt.mac);
+    Serial.print("\nDevice disconnected: ");
+    Serial.println(macAddress);
+    removeDevice(macAddress);
+    Serial.print("Total devices now: ");
+    Serial.println(m_deviceCount);
+}
 
 //Returns the number of connected devices
 int WiFiHandler::getDeviceCount()
 {
     return m_deviceCount;
 }
-
 
 //Iterates through the connected devices and returns the MAC address of each device 
 String WiFiHandler::getConnectedDevice(int index) 
