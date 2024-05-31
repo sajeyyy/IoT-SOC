@@ -147,5 +147,21 @@ void ServerHandler::handleDeviceList()
    	 m_Server.send(200, "application/json", json);
 }
 
+void ServerHandler::on(const char* uri, HTTPMethod method, std::function<void()> handler) {
+    m_Server.on(uri, method, handler);
+}
+
+void ServerHandler::send(int code, const char* content_type, const String& content) {
+    m_Server.send(code, content_type, content);
+}
+
+bool ServerHandler::hasArg(const char* name) {
+    return m_Server.hasArg(name);
+}
+
+String ServerHandler::arg(const char* name) {
+    return m_Server.arg(name);
+}
+
 
 

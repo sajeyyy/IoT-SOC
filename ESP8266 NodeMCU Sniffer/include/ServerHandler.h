@@ -10,6 +10,10 @@ public:
     ServerHandler(WiFiHandler& WiFiHandler);
     void begin();
     void handleClient();
+    void on(const char* uri, HTTPMethod method, std::function<void()> handler);
+    void send(int code, const char* content_type, const String& content);
+    bool hasArg(const char* name);
+    String arg(const char* name);
 
 private:
     ESP8266WebServer m_Server;

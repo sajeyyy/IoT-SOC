@@ -47,21 +47,25 @@ String WiFiHandler::macToString(const uint8_t* mac)
     return String(buf);
 }
 
-void WiFiHandler::removeDevice(String macAddress) {
+void WiFiHandler::removeDevice(String macAddress) 
+{
     int indexToRemove = -1;
     // Find the index of the device to remove
-    for (int i = 0; i < m_deviceCount; ++i) {
+    for (int i = 0; i < m_deviceCount; ++i)
+    {
         if (m_connectedDevices[i] == macAddress) {
             indexToRemove = i;
             break;
         }
     }
     // If the device was found, remove it by shifting elements
-    if (indexToRemove != -1) {
-        for (int i = indexToRemove; i < m_deviceCount - 1; ++i) {
+    if (indexToRemove != -1) 
+    {
+        for (int i = indexToRemove; i < m_deviceCount - 1; ++i) 
+        {
             m_connectedDevices[i] = m_connectedDevices[i + 1];
         }
-        m_deviceCount--; // Decrement the count of connected devices
+    m_deviceCount--;
     }
 }
 
@@ -80,8 +84,9 @@ void WiFiHandler::onStationConnected(const WiFiEventSoftAPModeStationConnected& 
 }
 
 //Callback function when a client disconnects from the AP
-void WiFiHandler::onStationDisconnected(const WiFiEventSoftAPModeStationDisconnected& evt) {
-    String macAddress = macToString(evt.mac);
+void WiFiHandler::onStationDisconnected(const WiFiEventSoftAPModeStationDisconnected& event) 
+{
+    String macAddress = macToString(event.mac);
     Serial.print("\nDevice disconnected: ");
     Serial.println(macAddress);
     removeDevice(macAddress);
@@ -108,4 +113,62 @@ String WiFiHandler::getConnectedDevice(int index)
         return "";
     }
 }
+
+//Scans all networks nearby
+String WiFiHandler::scanNetworks() 
+{
+    int n = WiFi.scanNetworks();
+    String json = "[";
+    for (int i = 0; i < n; ++i) {
+        if (i) json += ",";
+        json += "{";
+        json += "\"ssid\":\"" + WiFi.SSID(i) + "\",";
+        json += "\"rssi\":" + String(WiFi.RSSI(i));
+        json += "}";
+    }
+    json += "]";
+    return json;
+}
+
+//Connects to a WiFi network using given ssid and password
+bool WiFiHandler::connectToNetwork(const char* ssid, const char* password) 
+{
+    WiFi.begin(ssid, password);
+
+    while (WiFi.status() != WL_CONNECTED && m_retries < 20)
+    {
+        delay(500);
+        m_retries++;
+    }
+    Serial.println("\nConnected to "" + WiFi.SSID() + ""\nRSSI: " + String(WiFi.RSSI()));
+    return (WiFi.status() == WL_CONNECTED);
+}
+
+bool WiFiHandler::isConnected()
+{
+    return WiFi.status() == WL_CONNECTED;
+}
+
+String WiFiHandler::getConnectedSSID()
+{
+    if (isConnected()) 
+    {
+        return WiFi.SSID();
+    }
+    else
+    {
+        return "Not Connected to a Network";
+    }
+}
+
+//Disconnects from the current connection
+void WiFiHandler::disconnect() 
+{
+    if(isConnected())
+    {
+        Serial.println("Disconnecting from Network: " + WiFi.SSID());
+        WiFi.disconnect();
+    }
+}
+
 

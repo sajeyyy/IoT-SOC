@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi Manager</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5dc;
+        }
+        .container {
+            padding: 20px;
+            text-align: center;
+        }
+        .network {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #154917;
+            color: white;
+            cursor: pointer;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WiFi Manager</h1>
+        <div id="status" class="status">Status: _____</div>
+        <button onclick="scanNetworks()">Scan for Networks</button>
+        <div id="networks"></div>
+    </div>
+
+    <script>
+        function updateStatus(statusText) {
+            document.getElementById('status').innerText = "Status: " + statusText;
+        }
+
+        function scanNetworks() {
+            updateStatus("Scanning...")
+            fetch('/scan')
+                .then(response => response.json())
+                .then(data => {
+                    const networksDiv = document.getElementById('networks');
+                    networksDiv.innerHTML = '';
+                    data.forEach((network, index) => {
+                        const networkDiv = document.createElement('div');
+                        networkDiv.classList.add('network');
+                        networkDiv.innerHTML = `
+                            <strong>${network.ssid}</strong> (${network.rssi} dBm)
+                            <br>
+                            <button onclick="connectToNetwork('${network.ssid}')">Connect</button>
+                        `;
+                        networksDiv.appendChild(networkDiv);
+                    });
+                });
+            setTimeout(function() {
+                updateStatus("Scan complete");
+            }, 2500);
+        }
+
+        function connectToNetwork(ssid) {
+            const password = prompt(`Enter password for ${ssid}:`);
+            if (password !== null) {
+                fetch('/connect', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ ssid, password })
+                })
+                .then(response => response.text())
+                .then(message => {
+                    alert(message);
+                    checkStatus(); // Update status after connecting
+                });
+            }
+        }
+
+        function checkStatus() {
+            fetch('/status')
+                .then(response => response.text())
+                .then(status => {
+                    updateStatus(status);
+                });
+        }
+        checkStatus();
+    </script>
+</body>
+</html>
