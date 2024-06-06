@@ -19,10 +19,9 @@ void WiFiHandler::setupAP()
     Serial.print("Password: ");
     Serial.println(m_psk);
 
-// WiFi Configuration will not be saved in flash memory 
     WiFi.persistent(false);
 
-// Set up an access point
+// Set up the access point
     WiFi.mode(WIFI_AP);
     WiFi.softAP(m_ssid, m_psk);
 
@@ -117,7 +116,7 @@ String WiFiHandler::getConnectedDevice(int index)
 //Scans all networks nearby
 String WiFiHandler::scanNetworks() 
 {
-    Serial.println("Scanning Networks");
+    Serial.println("\nScanning Networks...");
 
     int n = WiFi.scanNetworks();
     String json = "[";
@@ -129,6 +128,7 @@ String WiFiHandler::scanNetworks()
         json += "}";
     }
     json += "]";
+    Serial.println("\nScan Complete!");
     return json;
 }
 

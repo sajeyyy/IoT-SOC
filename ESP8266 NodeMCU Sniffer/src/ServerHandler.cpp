@@ -43,7 +43,6 @@ void ServerHandler::handleRoot()
 	{
 		m_Server.streamFile(htmlFile, "text/html");
 		htmlFile.close();
-		Serial.println("\nHTML file sent to the server successfully!");
 	} 
 	else 
 	{
@@ -59,10 +58,10 @@ void ServerHandler::handleJS()
     {
     	m_Server.streamFile(jsFile, "application/javascript");
       	jsFile.close();
-      	Serial.println("JavaScript file sent to the server successfully!");
     } 
     else 
     {
+		Serial.println("\nJavaScript file not found!");
       	m_Server.send(404, "text/plain", "404: Not Found");
     }
 }
@@ -75,11 +74,10 @@ void ServerHandler::handleCSS()
     {
       	m_Server.streamFile(cssFile, "text/css");
       	cssFile.close();
-      	Serial.println("CSS file sent to the server successfully!");
     }
-
     else 
     {
+		Serial.println("\nCSS file not found!");
       	m_Server.send(404, "text/plain", "404: Not Found");
     }
 }
@@ -109,7 +107,7 @@ void ServerHandler::handleFile(String path) {
         return;
     }
 
-    Serial.println("File sent: " + path);
+    //Serial.println("File sent: " + path);
     m_Server.streamFile(file, contentType);
     file.close();
 }
@@ -122,7 +120,7 @@ String ServerHandler::getContentType(String filename) {
     else if (filename.endsWith(".js")) return "application/javascript";
     else if (filename.endsWith(".png")) return "image/png";
     else if (filename.endsWith(".jpg")) return "image/jpeg";
-    
+	
 	(Serial.println("\nIncompatible File Type!")); 
 	return "text/plain";
 }

@@ -18,7 +18,6 @@
         <div class="menu-placeholder"></div>
     </header>
     
-
     <hr class="separator">
 
     <div class="container">
@@ -27,64 +26,6 @@
         <div id="networks"></div>
     </div>
 
-    <script>
-        function updateStatus(statusText) {
-            document.getElementById('status').innerText = "Status: " + statusText;
-        }
-
-        function scanNetworks() {
-            updateStatus("Scanning...")
-            fetch('/scan')
-                .then(response => response.json())
-                .then(data => {
-                    const networksDiv = document.getElementById('networks');
-                    networksDiv.innerHTML = '';
-                    data.forEach((network, index) => {
-                        const networkDiv = document.createElement('div');
-                        networkDiv.classList.add('network');
-                        networkDiv.innerHTML = `
-                            <strong>${network.ssid}</strong> (${network.rssi} dBm)
-                            <br>
-                            <button onclick="connectToNetwork('${network.ssid}')">Connect</button>
-                        `;
-                        networksDiv.appendChild(networkDiv);
-                    });
-                });
-            setTimeout(function() {
-                updateStatus("Scan complete");
-            }, 2500);
-        }
-
-        function connectToNetwork(ssid) {
-            const password = prompt(`Enter password for ${ssid}:`);
-            if (password !== null) {
-                fetch('/connect', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ssid, password })
-                })
-                .then(response => response.text())
-                .then(message => {
-                    alert(message);
-                    checkStatus(); // Update status after connecting
-                });
-            }
-        }
-
-        function checkStatus() {
-            fetch('/status')
-                .then(response => response.text())
-                .then(status => {
-                    updateStatus(status);
-                });
-        }
-
-        function goBack() {
-            window.location.href = "index.html";
-        }
-        checkStatus();
-    </script>
+    <script src="scripts.js"></script>
 </body>
 </html>

@@ -104,7 +104,7 @@ void setup()
   serverHandler.on("/status", HTTP_GET, []() {
   if (wifiHandler.isConnected()) 
   {
-    serverHandler.send(200, "text/plain", "Connected to: " + wifiHandler.getConnectedSSID());
+    serverHandler.send(200, "text/plain", "Connected to " + wifiHandler.getConnectedSSID());
   } 
   else 
   {
