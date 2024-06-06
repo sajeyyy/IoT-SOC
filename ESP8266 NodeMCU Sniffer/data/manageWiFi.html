@@ -4,43 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WiFi Manager</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: #f5f5dc;
-        }
-        .container {
-            padding: 20px;
-            text-align: center;
-        }
-        .network {
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #fff;
-        }
-        button {
-            padding: 10px 15px;
-            margin: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #154917;
-            color: white;
-            cursor: pointer;
-        }
-        .status {
-            margin-top: 20px;
-            padding: 10px;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
+
 <body>
+    <hr class="separator">
+
+    <header class="header">
+        <button onclick="goBack()" class="back-button">
+            <img src="images/backButton.png" alt="Back" />
+        </button>
+        <h1 class="title">WiFi Manager</h1>
+        <div class="menu-placeholder"></div>
+    </header>
+    
+
+    <hr class="separator">
+
     <div class="container">
-        <h1>WiFi Manager</h1>
-        <div id="status" class="status">Status: _____</div>
+        <div id="status" class="status">Status: Not Connected</div>
         <button onclick="scanNetworks()">Scan for Networks</button>
         <div id="networks"></div>
     </div>
@@ -81,7 +63,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ ssid, password })
+                    body: JSON.stringify({ssid, password })
                 })
                 .then(response => response.text())
                 .then(message => {
@@ -97,6 +79,10 @@
                 .then(status => {
                     updateStatus(status);
                 });
+        }
+
+        function goBack() {
+            window.location.href = "index.html";
         }
         checkStatus();
     </script>

@@ -10,7 +10,7 @@ WiFiHandler::WiFiHandler()
 }
 
 //Configures the softAP
-void WiFiHandler::connect() 
+void WiFiHandler::setupAP() 
 {
 // Set ESP8266 to AP mode with specified SSID and password
     Serial.println("\nSetting up ESP8266 Access Point...");
@@ -58,7 +58,7 @@ void WiFiHandler::removeDevice(String macAddress)
             break;
         }
     }
-    // If the device was found, remove it by shifting elements
+    // If the device is found, remove it by shifting elements
     if (indexToRemove != -1) 
     {
         for (int i = indexToRemove; i < m_deviceCount - 1; ++i) 
@@ -117,6 +117,8 @@ String WiFiHandler::getConnectedDevice(int index)
 //Scans all networks nearby
 String WiFiHandler::scanNetworks() 
 {
+    Serial.println("Scanning Networks");
+
     int n = WiFi.scanNetworks();
     String json = "[";
     for (int i = 0; i < n; ++i) {
@@ -134,21 +136,23 @@ String WiFiHandler::scanNetworks()
 bool WiFiHandler::connectToNetwork(const char* ssid, const char* password) 
 {
     WiFi.begin(ssid, password);
-
+    Serial.println("\nAttempting To Connect To " + WiFi.SSID());
     while (WiFi.status() != WL_CONNECTED && m_retries < 20)
     {
         delay(500);
         m_retries++;
     }
-    Serial.println("\nConnected to "" + WiFi.SSID() + ""\nRSSI: " + String(WiFi.RSSI()));
+    Serial.println("\nSuccessfully Connected To: " + WiFi.SSID() + "\nRSSI: " + String(WiFi.RSSI()));
     return (WiFi.status() == WL_CONNECTED);
 }
 
+//Returns a bool of if the device is connected to a WiFi network
 bool WiFiHandler::isConnected()
 {
     return WiFi.status() == WL_CONNECTED;
 }
 
+//Returns the SSID of the current network that the network is connected to
 String WiFiHandler::getConnectedSSID()
 {
     if (isConnected()) 
@@ -161,7 +165,7 @@ String WiFiHandler::getConnectedSSID()
     }
 }
 
-//Disconnects from the current connection
+//Disconnects from the current network connection
 void WiFiHandler::disconnect() 
 {
     if(isConnected())

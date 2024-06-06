@@ -7,7 +7,17 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <h1>Manage Connected Devices</h1>
+    <hr class="separator">
+
+    <header class="header">
+        <button onclick="goBack()" class="back-button">
+            <img src="images/backButton.png" alt="Back" />
+        </button>
+        <h1 class="title">Device Manager</h1>
+        <div class="menu-placeholder"></div>
+    </header>
+
+    <hr class="separator">
 
     <!-- Table to display connected devices -->
     <table id="device-table">
@@ -16,6 +26,10 @@
             <th>MAC Address</th>
         </tr>
     </table> 
-    <script src="scripts.js"></script>
+    <script>
+        function goBack() {
+        window.location.href = "index.html";
+        }
+    </script>
 </body>
 </html>

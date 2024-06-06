@@ -7,7 +7,7 @@ class WiFiHandler
 {
     public:
         WiFiHandler();
-        void connect();
+        void setupAP();
         WiFiEventHandler stationConnectedHandler;
         WiFiEventHandler stationDisconnectedHandler;
 

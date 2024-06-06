@@ -120,7 +120,7 @@ void setup()
 
 	serverHandler.begin(); // Begin the server
 	delay(2000);
-	wifiHandler.connect(); //Setup softAP
+	wifiHandler.setupAP(); //Setup softAP
 
 	Serial.println("\nWelcome ESP8266!");
 }
