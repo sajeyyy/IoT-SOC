@@ -7,13 +7,25 @@
 #include <Preferences.h>
 #include <LittleFS.h>
 #include <ArduinoJson.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_ST7735.h>
+#include <SPI.h>
 
-//Led Pin Number
-const int ledPin = D4; 
+// Pin Definitions
+#define LED_PIN       D4  // LED PIN
+#define TFT_CS        D8  // GPIO15
+#define TFT_RST       D3  // GPIO0
+#define TFT_DC        D2  // GPIO4
+#define TFT_SCLK      D5  // GPIO14
+#define TFT_MOSI      D7  // GPIO13
 
-//WiFi and Server Handler Objects
+
+// WiFi and Server Handler Objects
 WiFiHandler wifiHandler;
 ServerHandler serverHandler(wifiHandler); 
+
+// Initialize Adafruit Library
+Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
 /*|----------------------------------------------------------------|*/
 
@@ -48,11 +60,27 @@ void listDir(const String& directoryName)
   }
 }
 
-// Initialize the filesystem, server, and wifi
+// Initialize the filesystem, server, and WiFi
 void setup() 
 {
-	pinMode(ledPin, OUTPUT); 
+	pinMode(LED_PIN, OUTPUT); 
 	Serial.begin(9600); //Baud rate set to 9600 for serial communication
+  Serial.println("\n\nStarting ESP8266..."); 
+
+  // Initialize the display with different initialization parameter
+  tft.initR(INITR_REDTAB);   // Try INITR_BLACKTAB, INITR_REDTAB, or INITR_GREENTAB
+  Serial.println("Display initialized.");
+
+  // Fill screen with black color
+  tft.fillScreen(ST77XX_BLACK); 
+  Serial.println("Screen filled with black.");
+
+  // Set text color to white
+  tft.setTextColor(ST77XX_WHITE);
+  tft.setTextSize(2); // Set text size
+  tft.setCursor(0, 0); // Set cursor position
+  tft.println("Hello, World!");
+  Serial.println("Display Setup Complete");
 
 	//Initialize the LittleFS file system
 	if(LittleFS.begin())
@@ -65,16 +93,14 @@ void setup()
 		Serial.println("\nFile System Failed to Mount!");
 	}
 
-
-    // Handle scan requests
+// Handle scan requests
   serverHandler.on("/scan", HTTP_GET, []() 
   {
     String json = wifiHandler.scanNetworks();
     serverHandler.send(200, "application/json", json);
   });
 
-
-  // Handle connect requests
+// Handle connect requests
   serverHandler.on("/connect", HTTP_POST, []() {
     if (serverHandler.hasArg("plain")) {
       DynamicJsonDocument doc(1024);

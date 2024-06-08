@@ -172,9 +172,11 @@ body, html {
 }
 
 #device-table th, #device-table td {
-    text-align: left;
+    text-align: center;
     padding: 8px; 
     font-family: 'Teko', sans-serif; 
+    font-size: 18px; /* Increased font size */
+    font-weight: bold; /* Make text bold */
 }
 
 #device-table tr {
