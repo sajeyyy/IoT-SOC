@@ -82,6 +82,7 @@ void setup()
   tft.println("Hello, World!");
   Serial.println("Display Setup Complete");
 
+
 	//Initialize the LittleFS file system
 	if(LittleFS.begin())
 	{
