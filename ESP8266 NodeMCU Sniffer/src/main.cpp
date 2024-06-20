@@ -1,6 +1,4 @@
 #include <iostream>
-#include "ServerHandler.h"
-#include "WiFiHandler.h"
 #include <Arduino.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266WiFi.h>
@@ -11,6 +9,10 @@
 #include <Adafruit_ST7735.h>
 #include <SPI.h>
 
+#include "ServerHandler.h"
+#include "WiFiHandler.h"
+#include "UtilityFunctions.h"
+
 // Pin Definitions
 #define LED_PIN       D4  // LED PIN
 #define TFT_CS        D8  // GPIO15
@@ -19,13 +21,13 @@
 #define TFT_SCLK      D5  // GPIO14
 #define TFT_MOSI      D7  // GPIO13
 
-
-// WiFi and Server Handler Objects
-WiFiHandler wifiHandler;
-ServerHandler serverHandler(wifiHandler); 
-
 // Initialize Adafruit Library
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
+
+// WiFi and Server Handler Objects
+WiFiHandler wifiHandler(tft);
+ServerHandler serverHandler(wifiHandler, tft);
+
 
 /*|----------------------------------------------------------------|*/
 
@@ -67,18 +69,12 @@ void setup()
 	Serial.begin(9600); //Baud rate set to 9600 for serial communication
   Serial.println("\n\nStarting ESP8266..."); 
 
-  // Initialize the display with different initialization parameter
-  tft.initR(INITR_REDTAB);   // Try INITR_BLACKTAB, INITR_REDTAB, or INITR_GREENTAB
-  Serial.println("Display initialized.");
-
-  // Fill screen with black color
+  //Initialize the display
+  tft.initR(INITR_REDTAB);
   tft.fillScreen(ST77XX_BLACK); 
-  Serial.println("Screen filled with black.");
-
-  // Set text color to white
   tft.setTextColor(ST77XX_WHITE);
-  tft.setTextSize(2); // Set text size
-  tft.setCursor(0, 0); // Set cursor position
+  tft.setTextSize(2); 
+  tft.setCursor(0, 0);
   tft.println("Hello, World!");
   Serial.println("Display Setup Complete");
 
@@ -146,7 +142,7 @@ void setup()
   });
 
 	serverHandler.begin(); // Begin the server
-	delay(2000);
+	delay(3000);
 	wifiHandler.setupAP(); //Setup softAP
 
 	Serial.println("\nWelcome ESP8266!");

@@ -7,7 +7,7 @@
 class ServerHandler
 {
 public:
-    ServerHandler(WiFiHandler& WiFiHandler);
+    ServerHandler(WiFiHandler& WiFiHandler, Adafruit_ST7735& tft);
     void begin();
     void handleClient();
     void on(const char* uri, HTTPMethod method, std::function<void()> handler);
@@ -23,6 +23,7 @@ private:
     void handleCSS();
     void handleImages();
     void handleDeviceList();
+    Adafruit_ST7735& m_tft;
 
     void handleFile(String path);
     String getContentType(String filename);

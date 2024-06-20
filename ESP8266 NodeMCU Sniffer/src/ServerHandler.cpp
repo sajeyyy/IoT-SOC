@@ -1,10 +1,11 @@
-#include "ServerHandler.h"
-
 #include <Arduino.h>
 #include <ESP8266WebServer.h>
 #include <LittleFS.h>
 
-ServerHandler::ServerHandler(WiFiHandler& wifiHandler) : m_Server(80), m_WiFiHandler(wifiHandler)
+#include "ServerHandler.h"
+#include "UtilityFunctions.h"
+
+ServerHandler::ServerHandler(WiFiHandler& wifiHandler, Adafruit_ST7735& tft) : m_Server(80), m_WiFiHandler(wifiHandler), m_tft(tft)
 {
 // Setup routes and handlers
 	m_Server.on("/", HTTP_GET, std::bind(&ServerHandler::handleRoot, this));
@@ -25,6 +26,9 @@ void ServerHandler::begin()
 {
   	m_Server.begin();
   	Serial.println("\nHTTP server started!");
+
+    UtilityClass::clearDisplay(m_tft);
+    UtilityClass::printToDisplay(m_tft, "HTTP Server Started!...");
 }
 
 //Method to handle client requests

@@ -1,9 +1,13 @@
-#include "WiFiHandler.h"
-
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_ST7735.h>
+#include <SPI.h>
 
-WiFiHandler::WiFiHandler()
+#include "WiFiHandler.h"
+#include "UtilityFunctions.h"
+
+WiFiHandler::WiFiHandler(Adafruit_ST7735& tft) : m_tft(tft)
 {
     m_ssid = "Your ESP Friend";
     m_psk = "admin1234";
@@ -12,12 +16,16 @@ WiFiHandler::WiFiHandler()
 //Configures the softAP
 void WiFiHandler::setupAP() 
 {
+
 // Set ESP8266 to AP mode with specified SSID and password
-    Serial.println("\nSetting up ESP8266 Access Point...");
+    Serial.println("\nSetting up ESP8266 Access Point!...");
     Serial.print("\nSSID: ");
     Serial.println(m_ssid);
     Serial.print("Password: ");
     Serial.println(m_psk);
+
+    UtilityClass::clearDisplay(m_tft);
+    UtilityClass::printToDisplay(m_tft, "Setting up Access Point!...");
 
     WiFi.persistent(false);
 
@@ -30,6 +38,7 @@ void WiFiHandler::setupAP()
     Serial.println(WiFi.softAPIP());
 
     Serial.println("\nAccess Point Configured!");
+    
 
 // Register the callback for the AP station connection event
     stationConnectedHandler = WiFi.onSoftAPModeStationConnected(std::bind(&WiFiHandler::onStationConnected, this, std::placeholders::_1));
@@ -74,6 +83,9 @@ void WiFiHandler::onStationConnected(const WiFiEventSoftAPModeStationConnected& 
     Serial.print("\nNew device connected, MAC address: ");
     Serial.println(macToString(event.mac));
 
+    UtilityClass::clearDisplay(m_tft);
+    UtilityClass::printToDisplay(m_tft, "New device connected: " + macToString(event.mac));
+ 
 //Store the mac address in an array
     m_connectedDevices[m_deviceCount] = (macToString(event.mac));
     m_deviceCount += 1;
@@ -91,6 +103,9 @@ void WiFiHandler::onStationDisconnected(const WiFiEventSoftAPModeStationDisconne
     removeDevice(macAddress);
     Serial.print("Total devices now: ");
     Serial.println(m_deviceCount);
+
+    UtilityClass::clearDisplay(m_tft);
+    UtilityClass::printToDisplay(m_tft, "Device Disconnected: " + macToString(event.mac));
 }
 
 //Returns the number of connected devices
@@ -116,7 +131,10 @@ String WiFiHandler::getConnectedDevice(int index)
 //Scans all networks nearby
 String WiFiHandler::scanNetworks() 
 {
-    Serial.println("\nScanning Networks...");
+    Serial.println("\nScanning Networks!...");
+    UtilityClass::clearDisplay(m_tft);
+    UtilityClass::printToDisplay(m_tft, "Scanning Networks!...");
+
 
     int n = WiFi.scanNetworks();
     String json = "[";
@@ -129,6 +147,8 @@ String WiFiHandler::scanNetworks()
     }
     json += "]";
     Serial.println("\nScan Complete!");
+    UtilityClass::clearDisplay(m_tft);
+    UtilityClass::printToDisplay(m_tft, "\nScan Complete!");
     return json;
 }
 
@@ -137,12 +157,19 @@ bool WiFiHandler::connectToNetwork(const char* ssid, const char* password)
 {
     WiFi.begin(ssid, password);
     Serial.println("\nAttempting To Connect To " + WiFi.SSID());
+    UtilityClass::clearDisplay(m_tft);
+    UtilityClass::printToDisplay(m_tft, "\nSuccessfully Connected To: " + WiFi.SSID() + "\nRSSI: " + String(WiFi.RSSI()));
+    
     while (WiFi.status() != WL_CONNECTED && m_retries < 20)
     {
         delay(500);
         m_retries++;
     }
+
     Serial.println("\nSuccessfully Connected To: " + WiFi.SSID() + "\nRSSI: " + String(WiFi.RSSI()));
+    UtilityClass::clearDisplay(m_tft);
+    UtilityClass::printToDisplay(m_tft, "\nSuccessfully Connected To: " + WiFi.SSID() + "\nRSSI: " + String(WiFi.RSSI()));
+    
     return (WiFi.status() == WL_CONNECTED);
 }
 
@@ -171,6 +198,9 @@ void WiFiHandler::disconnect()
     if(isConnected())
     {
         Serial.println("Disconnecting from Network: " + WiFi.SSID());
+        UtilityClass::clearDisplay(m_tft);
+        UtilityClass::printToDisplay(m_tft, "Disconnecting from Network: " + WiFi.SSID());
+
         WiFi.disconnect();
     }
 }
