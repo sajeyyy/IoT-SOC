@@ -1,0 +1,54 @@
+*************** Future Implementations ***************
+------------------------------------------------------
+
+Network Monitoring
+------------------
+- Packet Sniffing
+- Track data usage of device
+- Real time bandwidth monitoring
+
+
+Enhanced Security
+-----------------
+- WPA3 security
+- Mac Address filtering to allow/block specific devices
+- * Intrustion Detection *
+
+Cloud Services
+--------------
+- Store logs or anazlyze network data
+- Get alerts
+
+
+Customizable Network Settings
+-----------------------------
+- Allow admins to change SSID, Password, DHCP settinsg, and etc ...
+- Enable/Disbale SoftAP
+
+
+User Authentication ?
+-------------------
+- User authetication, maybe using a 3rd party?
+- Compare user's MAC address to previous devices
+
+
+Mesh Networking
+---------------
+- Multiple Nodes(ESP Devices) to manage tasks in order to reduce the complexity per device
+- I2C Communication
+
+
+User Interace
+-------------
+- More interative and responsive 
+- Real time graph/chartts 
+
+Hardware
+--------
+- Fans for cooling
+- Wire ESP-12F Master to ESP8266 Slave for I2C communication
+- Case Aesthetics
+
+
+
+
