@@ -1,4 +1,4 @@
-# NodeMCU-Sniffer
+# NodeMCU SOC Network Manager
 ESP8266 NodeMCU Wi-Fi packet sniffer
 
 Soft AP: 
