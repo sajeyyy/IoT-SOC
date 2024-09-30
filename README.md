@@ -1,5 +1,4 @@
 # NodeMCU SOC Network Manager
-ESP8266 NodeMCU Wi-Fi packet sniffer
 
 Soft AP: 
 Allow clients to connect to the ESP8266's AP, and allowing the devices to capture the traffic as the user on the network. Only importatnt packets will be stored 
