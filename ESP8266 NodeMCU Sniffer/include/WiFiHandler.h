@@ -2,13 +2,12 @@
 #define WIFI_HANDLER_H
 
 #include <ESP8266WiFi.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_ST7735.h>
+
 
 class WiFiHandler
 {
     public:
-        WiFiHandler(Adafruit_ST7735& tft);
+        WiFiHandler();
 
         void setupAP();
         WiFiEventHandler stationConnectedHandler;
@@ -34,8 +33,6 @@ class WiFiHandler
         bool m_newUser;
         int m_deviceCount;
         String m_connectedDevices[6];
-
-        Adafruit_ST7735& m_tft;
 
         void removeDevice(String macAddress);
         String macToString(const uint8_t* mac);

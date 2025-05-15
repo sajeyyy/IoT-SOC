@@ -5,30 +5,29 @@
 #include "ServerHandler.h"
 #include "UtilityFunctions.h"
 
-ServerHandler::ServerHandler(WiFiHandler& wifiHandler, Adafruit_ST7735& tft) : m_Server(80), m_WiFiHandler(wifiHandler), m_tft(tft)
+ServerHandler::ServerHandler(WiFiHandler& wifiHandler)
+    : m_Server(80), m_WiFiHandler(wifiHandler)
 {
-// Setup routes and handlers
-	m_Server.on("/", HTTP_GET, std::bind(&ServerHandler::handleRoot, this));
-  	m_Server.on("/style.css", HTTP_GET, std::bind(&ServerHandler::handleCSS, this));
-  	m_Server.on("/script.js", HTTP_GET, std::bind(&ServerHandler::handleJS, this));
-	m_Server.on("/images", HTTP_GET, std::bind(&ServerHandler::handleImages, this)); 
-  	m_Server.on("/devices", HTTP_GET, std::bind(&ServerHandler::handleDeviceList, this)); 
+    // Setup routes and handlers
+    m_Server.on("/", HTTP_GET, std::bind(&ServerHandler::handleRoot, this));
+    m_Server.on("/style.css", HTTP_GET, std::bind(&ServerHandler::handleCSS, this));
+    m_Server.on("/script.js", HTTP_GET, std::bind(&ServerHandler::handleJS, this));
+    m_Server.on("/images", HTTP_GET, std::bind(&ServerHandler::handleImages, this)); 
+    m_Server.on("/devices", HTTP_GET, std::bind(&ServerHandler::handleDeviceList, this)); 
 
-	// Catch-all handler for any other GET requests
+    // Catch-all handler for any other GET requests
     m_Server.onNotFound([this]() 
-	{
+    {
         handleFile(m_Server.uri());
     });
 }
+
 
 // Start the server
 void ServerHandler::begin()
 {
   	m_Server.begin();
   	Serial.println("\nHTTP server started!");
-
-    UtilityClass::clearDisplay(m_tft);
-    UtilityClass::printToDisplay(m_tft, "HTTP Server Started!...");
 }
 
 //Method to handle client requests
