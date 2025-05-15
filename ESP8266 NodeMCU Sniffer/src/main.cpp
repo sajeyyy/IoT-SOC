@@ -5,8 +5,6 @@
 #include <Preferences.h>
 #include <LittleFS.h>
 #include <ArduinoJson.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_ST7735.h>
 #include <SPI.h>
 
 #include "ServerHandler.h"
@@ -15,18 +13,10 @@
 
 // Pin Definitions
 #define LED_PIN       D4  // LED PIN
-#define TFT_CS        D8  // GPIO15
-#define TFT_RST       D3  // GPIO0
-#define TFT_DC        D2  // GPIO4
-#define TFT_SCLK      D5  // GPIO14
-#define TFT_MOSI      D7  // GPIO13
-
-// Initialize Adafruit Library
-Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
 // WiFi and Server Handler Objects
-WiFiHandler wifiHandler(tft);
-ServerHandler serverHandler(wifiHandler, tft);
+WiFiHandler wifiHandler;
+ServerHandler serverHandler(wifiHandler);
 
 
 /*|----------------------------------------------------------------|*/
@@ -68,15 +58,6 @@ void setup()
 	pinMode(LED_PIN, OUTPUT); 
 	Serial.begin(9600); //Baud rate set to 9600 for serial communication
   Serial.println("\n\nStarting ESP8266..."); 
-
-  //Initialize the display
-  tft.initR(INITR_REDTAB);
-  tft.fillScreen(ST77XX_BLACK); 
-  tft.setTextColor(ST77XX_WHITE);
-  tft.setTextSize(2); 
-  tft.setCursor(0, 0);
-  tft.println("Hello, World!");
-  Serial.println("Display Setup Complete");
 
 
 	//Initialize the LittleFS file system
